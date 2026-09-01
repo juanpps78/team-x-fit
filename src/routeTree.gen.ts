@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CoachRouteImport } from './routes/coach'
+import { Route as EntrenarRouteImport } from './routes/entrenar'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as ProgresoRouteImport } from './routes/progreso'
+import { Route as ResumenRouteImport } from './routes/resumen'
+import { Route as RutinaRouteImport } from './routes/rutina'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrenarRoute = EntrenarRouteImport.update({
+  id: '/entrenar',
+  path: '/entrenar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgresoRoute = ProgresoRouteImport.update({
+  id: '/progreso',
+  path: '/progreso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumenRoute = ResumenRouteImport.update({
+  id: '/resumen',
+  path: '/resumen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RutinaRoute = RutinaRouteImport.update({
+  id: '/rutina',
+  path: '/rutina',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/coach': typeof CoachRoute
+  '/entrenar': typeof EntrenarRoute
+  '/home': typeof HomeRoute
+  '/perfil': typeof PerfilRoute
+  '/progreso': typeof ProgresoRoute
+  '/resumen': typeof ResumenRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/coach': typeof CoachRoute
+  '/entrenar': typeof EntrenarRoute
+  '/home': typeof HomeRoute
+  '/perfil': typeof PerfilRoute
+  '/progreso': typeof ProgresoRoute
+  '/resumen': typeof ResumenRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/coach': typeof CoachRoute
+  '/entrenar': typeof EntrenarRoute
+  '/home': typeof HomeRoute
+  '/perfil': typeof PerfilRoute
+  '/progreso': typeof ProgresoRoute
+  '/resumen': typeof ResumenRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/coach'
+    | '/entrenar'
+    | '/home'
+    | '/perfil'
+    | '/progreso'
+    | '/resumen'
+    | '/rutina'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/coach'
+    | '/entrenar'
+    | '/home'
+    | '/perfil'
+    | '/progreso'
+    | '/resumen'
+    | '/rutina'
+  id:
+    | '__root__'
+    | '/'
+    | '/coach'
+    | '/entrenar'
+    | '/home'
+    | '/perfil'
+    | '/progreso'
+    | '/resumen'
+    | '/rutina'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CoachRoute: typeof CoachRoute
+  EntrenarRoute: typeof EntrenarRoute
+  HomeRoute: typeof HomeRoute
+  PerfilRoute: typeof PerfilRoute
+  ProgresoRoute: typeof ProgresoRoute
+  ResumenRoute: typeof ResumenRoute
+  RutinaRoute: typeof RutinaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrenar': {
+      id: '/entrenar'
+      path: '/entrenar'
+      fullPath: '/entrenar'
+      preLoaderRoute: typeof EntrenarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progreso': {
+      id: '/progreso'
+      path: '/progreso'
+      fullPath: '/progreso'
+      preLoaderRoute: typeof ProgresoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resumen': {
+      id: '/resumen'
+      path: '/resumen'
+      fullPath: '/resumen'
+      preLoaderRoute: typeof ResumenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rutina': {
+      id: '/rutina'
+      path: '/rutina'
+      fullPath: '/rutina'
+      preLoaderRoute: typeof RutinaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CoachRoute: CoachRoute,
+  EntrenarRoute: EntrenarRoute,
+  HomeRoute: HomeRoute,
+  PerfilRoute: PerfilRoute,
+  ProgresoRoute: ProgresoRoute,
+  ResumenRoute: ResumenRoute,
+  RutinaRoute: RutinaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
