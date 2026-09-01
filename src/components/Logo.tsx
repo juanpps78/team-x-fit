@@ -4,7 +4,7 @@ export function Logo({ className = "", tone = "dark" }: { className?: string; to
       className={`font-display font-extrabold tracking-tight ${tone === "light" ? "text-carbon-foreground" : "text-carbon"} ${className}`}
     >
       TEAM
-      <span className="text-carbon-foreground mx-0.5 inline-block -skew-x-12 rounded-[0.3em] bg-primary px-[0.22em] py-[0.02em] !text-carbon">
+      <span className="mx-0.5 inline-block -skew-x-12 rounded-[0.25em] bg-primary px-[0.2em] text-carbon">
         X
       </span>
     </span>
