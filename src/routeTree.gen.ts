@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EntrenarRouteImport } from './routes/entrenar'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ResumenRouteImport } from './routes/resumen'
 import { Route as RutinaRouteImport } from './routes/rutina'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +20,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EntrenarRoute = EntrenarRouteImport.update({
+  id: '/entrenar',
+  path: '/entrenar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumenRoute = ResumenRouteImport.update({
+  id: '/resumen',
+  path: '/resumen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RutinaRoute = RutinaRouteImport.update({
@@ -31,31 +43,39 @@ const RutinaRoute = RutinaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/entrenar': typeof EntrenarRoute
   '/home': typeof HomeRoute
+  '/resumen': typeof ResumenRoute
   '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/entrenar': typeof EntrenarRoute
   '/home': typeof HomeRoute
+  '/resumen': typeof ResumenRoute
   '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/entrenar': typeof EntrenarRoute
   '/home': typeof HomeRoute
+  '/resumen': typeof ResumenRoute
   '/rutina': typeof RutinaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/rutina'
+  fullPaths: '/' | '/entrenar' | '/home' | '/resumen' | '/rutina'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/rutina'
-  id: '__root__' | '/' | '/home' | '/rutina'
+  to: '/' | '/entrenar' | '/home' | '/resumen' | '/rutina'
+  id: '__root__' | '/' | '/entrenar' | '/home' | '/resumen' | '/rutina'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EntrenarRoute: typeof EntrenarRoute
   HomeRoute: typeof HomeRoute
+  ResumenRoute: typeof ResumenRoute
   RutinaRoute: typeof RutinaRoute
 }
 
@@ -68,11 +88,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/entrenar': {
+      id: '/entrenar'
+      path: '/entrenar'
+      fullPath: '/entrenar'
+      preLoaderRoute: typeof EntrenarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resumen': {
+      id: '/resumen'
+      path: '/resumen'
+      fullPath: '/resumen'
+      preLoaderRoute: typeof ResumenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rutina': {
@@ -87,7 +121,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EntrenarRoute: EntrenarRoute,
   HomeRoute: HomeRoute,
+  ResumenRoute: ResumenRoute,
   RutinaRoute: RutinaRoute,
 }
 export const routeTree = rootRouteImport
