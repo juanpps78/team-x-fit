@@ -130,17 +130,17 @@ export const lastWorkout = {
   title: "Pecho + Tríceps",
   when: "Ayer",
   minutes: 52,
-  volume: 1704,
+  volume: 6520,
 };
 
 export const volumeHistory = [
-  { week: "S1", volumen: 1280 },
-  { week: "S2", volumen: 1390 },
-  { week: "S3", volumen: 1320 },
-  { week: "S4", volumen: 1500 },
-  { week: "S5", volumen: 1610 },
-  { week: "S6", volumen: 1704 },
-  { week: "S7", volumen: 1840 },
+  { week: "S1", volumen: 5100 },
+  { week: "S2", volumen: 5480 },
+  { week: "S3", volumen: 5320 },
+  { week: "S4", volumen: 5950 },
+  { week: "S5", volumen: 6180 },
+  { week: "S6", volumen: 6520 },
+  { week: "S7", volumen: 7040 },
 ];
 
 export const personalRecords = [
