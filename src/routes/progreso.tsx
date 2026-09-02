@@ -34,7 +34,7 @@ function ProgresoPage() {
           Evolución del volumen
         </p>
         <div className="mt-4 h-48 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="99%" height="100%" debounce={50}>
             <AreaChart data={volumeHistory} margin={{ left: 0, right: 0, top: 6, bottom: 0 }}>
               <defs>
                 <linearGradient id="vol" x1="0" y1="0" x2="0" y2="1">
@@ -93,7 +93,7 @@ function Kpi({ label, value, highlight = false }: { label: string; value: string
   return (
     <div className={`rounded-2xl p-4 shadow-card ${highlight ? "bg-primary" : "bg-card"}`}>
       <p className="font-display text-xl font-extrabold">{value}</p>
-      <p className="text-[11px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className={`text-[11px] uppercase tracking-widest ${highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{label}</p>
     </div>
   );
 }

@@ -21,7 +21,7 @@ type Msg = { role: "user" | "coach"; text: string };
 function demoAnswer(q: string): string {
   const t = q.toLowerCase();
   if (t.includes("entreno hoy") || t.includes("qué entreno"))
-    return `Hoy toca ${workoutDay.title}: ${exercises.length} ejercicios, unos ${workoutDay.estimatedMinutes} minutos. Empieza con ${exercises[0].name}.`;
+    return `Hoy toca ${workoutDay.title}: ${exercises.length} ejercicios, unos ${workoutDay.estimatedMinutes} minutos. Empieza con ${exercises[0]!.name}.`;
   if (t.includes("sustitu"))
     return "Puedes cambiar el press de banca por press en máquina o con mancuernas, manteniendo series y repeticiones.";
   if (t.includes("descans"))
