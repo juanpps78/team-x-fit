@@ -3,7 +3,7 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } f
 import { AppShell } from "@/components/AppShell";
 import { demoUser, personalRecords, volumeHistory } from "@/lib/teamx-data";
 
-export const Route = createFileRoute("/progreso")({
+export const Route = createFileRoute("/_authenticated/progreso")({
   head: () => ({
     meta: [
       { title: "Mi progreso — TEAM-X" },

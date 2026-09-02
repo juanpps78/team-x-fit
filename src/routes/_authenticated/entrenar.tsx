@@ -6,7 +6,7 @@ import { Stepper } from "@/components/Stepper";
 import { exercises } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
-export const Route = createFileRoute("/entrenar")({
+export const Route = createFileRoute("/_authenticated/entrenar")({
   head: () => ({
     meta: [
       { title: "Entrenando — TEAM-X" },

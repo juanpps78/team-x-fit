@@ -4,7 +4,7 @@ import { AppShell } from "@/components/AppShell";
 import { exercises, workoutDay } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
-export const Route = createFileRoute("/rutina")({
+export const Route = createFileRoute("/_authenticated/rutina")({
   head: () => ({
     meta: [
       { title: "Rutina Pecho + Tríceps — TEAM-X" },
