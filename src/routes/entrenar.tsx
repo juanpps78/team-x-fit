@@ -27,7 +27,7 @@ function TrainPage() {
   const [notes, setNotes] = useState("");
 
   const index = Math.min(session.currentIndex, exercises.length - 1);
-  const exercise = exercises[index];
+  const exercise = exercises[index] ?? exercises[0]!;
 
   useEffect(() => {
     if (!session.startedAt) startWorkout();
@@ -128,7 +128,7 @@ function TrainPage() {
                 weight,
                 reps,
                 sets: exercise.sets,
-                notes: notes || undefined,
+                notes,
               })
             }
             className="flex h-16 w-full items-center justify-center rounded-2xl bg-primary font-display text-lg font-bold uppercase tracking-wide text-primary-foreground transition active:scale-[0.98]"
