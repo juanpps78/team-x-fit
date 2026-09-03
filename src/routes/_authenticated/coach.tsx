@@ -4,7 +4,7 @@ import { Send } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { suggestedQuestions, workoutDay, exercises, lastWorkout } from "@/lib/teamx-data";
 
-export const Route = createFileRoute("/_authenticated/coach")({
+export const Route = createFileRoute("/_authenticated/_authenticated/coach")({
   head: () => ({
     meta: [
       { title: "Coach TEAM-X — Asistente de entrenamiento" },
