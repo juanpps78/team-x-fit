@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { demoUser } from "@/lib/teamx-data";
+import { supabase } from "@/integrations/supabase/client";
+import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
@@ -15,12 +17,23 @@ export const Route = createFileRoute("/_authenticated/perfil")({
 });
 
 function PerfilPage() {
+  const { user } = useWorkout();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const rows = [
-    { label: "Objetivo", value: demoUser.goal },
-    { label: "Nivel", value: demoUser.level },
-    { label: "Días de entrenamiento", value: `${demoUser.daysPerWeek} días por semana` },
-    { label: "Tiempo disponible", value: `${demoUser.minutesPerSession} minutos` },
+    { label: "Objetivo", value: user.goal },
+    { label: "Nivel", value: user.level },
+    { label: "Días de entrenamiento", value: `${user.daysPerWeek} días por semana` },
+    { label: "Tiempo disponible", value: `${user.minutesPerSession} minutos` },
   ];
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
 
   return (
     <AppShell>
@@ -28,12 +41,12 @@ function PerfilPage() {
 
       <div className="mt-5 flex items-center gap-4 rounded-3xl bg-card p-5 shadow-card">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-carbon font-display text-2xl font-extrabold text-primary">
-          C
+          {user.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0">
-          <p className="truncate font-display text-xl font-bold">{demoUser.name}</p>
+          <p className="truncate font-display text-xl font-bold">{user.name}</p>
           <p className="text-sm text-muted-foreground">
-            {demoUser.totalWorkouts} entrenamientos · Racha {demoUser.streak}
+            {user.totalWorkouts} entrenamientos · Racha {user.streak}
           </p>
         </div>
       </div>
@@ -54,12 +67,12 @@ function PerfilPage() {
         Editar perfil
       </button>
 
-      <Link
-        to="/"
-        className="mt-3 flex h-12 items-center justify-center rounded-2xl text-sm font-medium text-muted-foreground"
+      <button
+        onClick={signOut}
+        className="mt-3 flex h-12 w-full items-center justify-center rounded-2xl text-sm font-medium text-muted-foreground"
       >
         Cerrar sesión
-      </Link>
+      </button>
     </AppShell>
   );
 }
