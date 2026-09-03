@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Send } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { suggestedQuestions, workoutDay, exercises, lastWorkout } from "@/lib/teamx-data";
+import { suggestedQuestions } from "@/lib/teamx-data";
+import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/coach")({
   head: () => ({
@@ -18,10 +19,13 @@ export const Route = createFileRoute("/_authenticated/coach")({
 
 type Msg = { role: "user" | "coach"; text: string };
 
-function demoAnswer(q: string): string {
+function CoachPage() {
+  const { day, exercises, lastWorkout, user } = useWorkout();
+
+  function demoAnswer(q: string): string {
   const t = q.toLowerCase();
   if (t.includes("entreno hoy") || t.includes("qué entreno"))
-    return `Hoy toca ${workoutDay.title}: ${exercises.length} ejercicios, unos ${workoutDay.estimatedMinutes} minutos. Empieza con ${exercises[0]!.name}.`;
+    return `Hoy toca ${day.title}: ${exercises.length} ejercicios, unos ${day.estimatedMinutes} minutos. Empieza con ${exercises[0]?.name ?? "tu primer ejercicio"}.`;
   if (t.includes("sustitu"))
     return "Puedes cambiar el press de banca por press en máquina o con mancuernas, manteniendo series y repeticiones.";
   if (t.includes("descans"))
@@ -29,11 +33,10 @@ function demoAnswer(q: string): string {
   if (t.includes("progreso"))
     return "Vas muy bien: +12% de volumen en las últimas semanas y racha activa. Mantén el ritmo.";
   return "Estoy en modo demo en esta primera versión. Muy pronto responderé con IA usando tus datos reales de entrenamiento.";
-}
+  }
 
-function CoachPage() {
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "coach", text: "Hola Carlos 👋 Soy tu Coach TEAM-X. ¿En qué te ayudo hoy?" },
+    { role: "coach", text: `Hola ${user.name} 👋 Soy tu Coach TEAM-X. ¿En qué te ayudo hoy?` },
   ]);
   const [input, setInput] = useState("");
 

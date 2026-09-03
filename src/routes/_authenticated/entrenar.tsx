@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Timer } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Stepper } from "@/components/Stepper";
-import { exercises } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/entrenar")({
@@ -20,29 +19,38 @@ export const Route = createFileRoute("/_authenticated/entrenar")({
 
 function TrainPage() {
   const navigate = useNavigate();
-  const { session, startWorkout, logExercise } = useWorkout();
+  const { session, startWorkout, logExercise, exercises, loading } = useWorkout();
   const [logging, setLogging] = useState(false);
   const [weight, setWeight] = useState(0);
   const [reps, setReps] = useState(0);
   const [notes, setNotes] = useState("");
 
-  const index = Math.min(session.currentIndex, exercises.length - 1);
-  const exercise = exercises[index] ?? exercises[0]!;
+  const index = Math.max(0, Math.min(session.currentIndex, exercises.length - 1));
+  const exercise = exercises[index];
 
   useEffect(() => {
-    if (!session.startedAt) startWorkout();
-  }, [session.startedAt, startWorkout]);
+    if (!loading && exercises.length > 0 && !session.startedAt) void startWorkout();
+  }, [loading, exercises.length, session.startedAt, startWorkout]);
 
   useEffect(() => {
     if (session.finished) navigate({ to: "/resumen" });
   }, [session.finished, navigate]);
 
   useEffect(() => {
+    if (!exercise) return;
     setWeight(exercise.targetWeight);
     setReps(exercise.reps);
     setNotes("");
     setLogging(false);
   }, [exercise]);
+
+  if (!exercise) {
+    return (
+      <AppShell nav={false}>
+        <p className="mt-10 text-center text-sm text-muted-foreground">Cargando tu rutina…</p>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell nav={false}>
@@ -123,7 +131,7 @@ function TrainPage() {
 
           <button
             onClick={() =>
-              logExercise({
+              void logExercise({
                 exerciseId: exercise.id,
                 weight,
                 reps,

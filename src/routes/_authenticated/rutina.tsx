@@ -1,18 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { exercises, workoutDay } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/rutina")({
   head: () => ({
     meta: [
-      { title: "Rutina Pecho + Tríceps — TEAM-X" },
+      { title: "Mi rutina — TEAM-X" },
       {
         name: "description",
-        content: "Los 7 ejercicios de tu rutina con series, repeticiones, peso objetivo y descanso.",
+        content: "Los ejercicios de tu rutina con series, repeticiones, peso objetivo y descanso.",
       },
-      { property: "og:title", content: "Rutina Pecho + Tríceps — TEAM-X" },
+      { property: "og:title", content: "Mi rutina — TEAM-X" },
       { property: "og:description", content: "Series, repeticiones, peso y descanso de cada ejercicio." },
     ],
   }),
@@ -20,14 +19,14 @@ export const Route = createFileRoute("/_authenticated/rutina")({
 });
 
 function RutinaPage() {
-  const { session } = useWorkout();
+  const { session, exercises, day } = useWorkout();
   const doneIds = new Set(session.logs.map((l) => l.exerciseId));
 
   return (
     <AppShell>
-      <h1 className="font-display text-2xl font-extrabold">{workoutDay.title}</h1>
+      <h1 className="font-display text-2xl font-extrabold">{day.title}</h1>
       <p className="text-sm text-muted-foreground">
-        {exercises.length} ejercicios · {workoutDay.estimatedMinutes} min aprox.
+        {exercises.length} ejercicios · {day.estimatedMinutes} min aprox.
       </p>
 
       <ul className="mt-5 space-y-3">
