@@ -3,7 +3,7 @@ import { AppShell } from "@/components/AppShell";
 import { demoUser, exercises } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/resumen")({
+export const Route = createFileRoute("/_authenticated/resumen")({
   head: () => ({
     meta: [
       { title: "Entrenamiento completado — TEAM-X" },

@@ -5,7 +5,7 @@ import { Logo } from "@/components/Logo";
 import { exercises, lastWorkout, workoutDay } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/home")({
+export const Route = createFileRoute("/_authenticated/home")({
   head: () => ({
     meta: [
       { title: "Inicio — TEAM-X" },
