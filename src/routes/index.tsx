@@ -46,27 +46,27 @@ function Welcome() {
         </p>
 
         <Link
-          to="/home"
+          to="/auth"
           className="mt-8 flex h-16 items-center justify-center rounded-2xl bg-primary font-display text-lg font-bold uppercase tracking-wide text-primary-foreground shadow-lift transition active:scale-[0.98]"
         >
           Comenzar
         </Link>
         <div className="mt-4 grid grid-cols-2 gap-3">
           <Link
-            to="/home"
+            to="/auth"
             className="flex h-12 items-center justify-center rounded-xl border border-carbon-foreground/25 text-sm font-medium text-carbon-foreground"
           >
             Ya tengo cuenta
           </Link>
           <Link
-            to="/home"
+            to="/auth"
             className="flex h-12 items-center justify-center rounded-xl border border-carbon-foreground/25 text-sm font-medium text-carbon-foreground"
           >
             Crear cuenta
           </Link>
         </div>
         <p className="mt-4 text-center text-xs text-carbon-foreground/50">
-          Versión demo — entras como Carlos
+          Crea tu cuenta gratis y guarda tu progreso
         </p>
       </div>
     </main>
