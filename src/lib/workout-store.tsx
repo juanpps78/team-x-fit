@@ -185,7 +185,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
         weight: Number(l.weight),
         reps: l.reps,
         sets: l.sets,
-        notes: l.notes ?? undefined,
+        ...(l.notes ? { notes: l.notes } : {}),
       }));
       setSession({
         id: open.id,
