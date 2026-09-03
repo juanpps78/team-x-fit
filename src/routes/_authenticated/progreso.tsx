@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { AppShell } from "@/components/AppShell";
-import { demoUser, personalRecords, volumeHistory } from "@/lib/teamx-data";
+import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/progreso")({
   head: () => ({
@@ -19,14 +19,17 @@ export const Route = createFileRoute("/_authenticated/progreso")({
 });
 
 function ProgresoPage() {
+  const { user, history, records, totals } = useWorkout();
+  const volumeHistory = history;
+  const personalRecords = records;
   return (
     <AppShell>
       <h1 className="font-display text-2xl font-extrabold">Mi progreso</h1>
 
       <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-        <Kpi label="Entrenos" value={`${demoUser.totalWorkouts}`} />
-        <Kpi label="Racha" value={`${demoUser.streak + 1} días`} />
-        <Kpi label="Volumen" value="+12%" highlight />
+        <Kpi label="Entrenos" value={`${user.totalWorkouts}`} />
+        <Kpi label="Racha" value={`${user.streak} días`} />
+        <Kpi label="Volumen" value={`${totals.deltaPct >= 0 ? "+" : ""}${totals.deltaPct}%`} highlight />
       </div>
 
       <section className="mt-5 rounded-3xl bg-card p-5 shadow-card">

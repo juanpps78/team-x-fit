@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Clock, Dumbbell, Flame } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Logo } from "@/components/Logo";
-import { exercises, lastWorkout, workoutDay } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -18,9 +17,9 @@ export const Route = createFileRoute("/_authenticated/home")({
 });
 
 function HomePage() {
-  const { user, session } = useWorkout();
+  const { user, session, exercises, lastWorkout, day } = useWorkout();
   const done = session.logs.length;
-  const pct = Math.round((done / exercises.length) * 100);
+  const pct = exercises.length ? Math.round((done / exercises.length) * 100) : 0;
 
   return (
     <AppShell>
@@ -37,14 +36,14 @@ function HomePage() {
           Entrenamiento de hoy
         </p>
         <h1 className="mt-2 font-display text-3xl font-extrabold text-carbon-foreground">
-          {workoutDay.title}
+          {day.title}
         </h1>
         <div className="mt-3 flex flex-wrap gap-4 text-sm text-carbon-foreground/70">
           <span className="flex items-center gap-1.5">
             <Dumbbell className="h-4 w-4" /> {exercises.length} ejercicios
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4" /> {workoutDay.estimatedMinutes} min aprox.
+            <Clock className="h-4 w-4" /> {day.estimatedMinutes} min aprox.
           </span>
         </div>
 

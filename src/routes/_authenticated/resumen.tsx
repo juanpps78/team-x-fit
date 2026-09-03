@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { demoUser, exercises } from "@/lib/teamx-data";
 import { useWorkout } from "@/lib/workout-store";
 
 export const Route = createFileRoute("/_authenticated/resumen")({
@@ -16,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/resumen")({
 });
 
 function ResumenPage() {
-  const { totals, session, resetWorkout } = useWorkout();
+  const { totals, session, resetWorkout, exercises, user } = useWorkout();
   const done = session.logs.length || exercises.length;
 
   return (
@@ -45,7 +44,7 @@ function ResumenPage() {
 
       <div className="mt-4 flex items-center gap-3 rounded-2xl bg-primary/20 p-4">
         <span className="text-lg">🔥</span>
-        <p className="text-sm font-semibold">Racha actual: {demoUser.streak + 1} entrenamientos</p>
+        <p className="text-sm font-semibold">Racha actual: {user.streak} entrenamientos</p>
       </div>
 
       <Link
