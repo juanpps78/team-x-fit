@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/progreso")({
 });
 
 function ProgresoPage() {
-  const { user, history, records, totals } = useWorkout();
+  const { user, history, records, progressDeltaPct } = useWorkout();
   const volumeHistory = history;
   const personalRecords = records;
   return (
@@ -29,7 +29,7 @@ function ProgresoPage() {
       <div className="mt-5 grid grid-cols-3 gap-3 text-center">
         <Kpi label="Entrenos" value={`${user.totalWorkouts}`} />
         <Kpi label="Racha" value={`${user.streak} días`} />
-        <Kpi label="Volumen" value={`${totals.deltaPct >= 0 ? "+" : ""}${totals.deltaPct}%`} highlight />
+        <Kpi label="Volumen" value={`${progressDeltaPct >= 0 ? "+" : ""}${progressDeltaPct}%`} highlight />
       </div>
 
       <section className="mt-5 rounded-3xl bg-card p-5 shadow-card">
