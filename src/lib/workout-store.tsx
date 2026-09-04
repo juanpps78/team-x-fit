@@ -40,6 +40,7 @@ type Ctx = {
   session: SessionState;
   history: HistoryPoint[];
   records: Record_[];
+  progressDeltaPct: number;
   lastWorkout: { title: string; when: string; minutes: number; volume: number };
   startWorkout: () => Promise<void>;
   logExercise: (log: LoggedExercise) => Promise<void>;
@@ -277,6 +278,14 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     [session, exercises.length, day.estimatedMinutes],
   );
 
+  const progressDeltaPct = useMemo(() => {
+    if (history.length < 2) return 0;
+    const prev = history[history.length - 2]!.volumen;
+    const last = history[history.length - 1]!.volumen;
+    if (!prev) return 0;
+    return Math.round(((last - prev) / prev) * 100);
+  }, [history]);
+
   const totals = useMemo(() => {
     const volume = session.logs.reduce((acc, l) => acc + l.weight * l.reps * l.sets, 0);
     const sets = session.logs.reduce((acc, l) => acc + l.sets, 0);
@@ -298,6 +307,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       session,
       history,
       records,
+      progressDeltaPct,
       lastWorkout,
       startWorkout,
       logExercise,
@@ -312,6 +322,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       session,
       history,
       records,
+      progressDeltaPct,
       lastWorkout,
       startWorkout,
       logExercise,
