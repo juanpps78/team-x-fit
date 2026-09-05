@@ -78,24 +78,33 @@ export type Database = {
       exercises: {
         Row: {
           created_at: string
+          description: string
+          equipment: string
           id: string
           image_key: string
+          is_active: boolean
           muscle: string
           name: string
           slug: string
         }
         Insert: {
           created_at?: string
+          description?: string
+          equipment?: string
           id?: string
           image_key?: string
+          is_active?: boolean
           muscle: string
           name: string
           slug: string
         }
         Update: {
           created_at?: string
+          description?: string
+          equipment?: string
           id?: string
           image_key?: string
+          is_active?: boolean
           muscle?: string
           name?: string
           slug?: string
@@ -179,6 +188,7 @@ export type Database = {
           day_id: string
           exercise_id: string
           id: string
+          notes: string | null
           position: number
           reps: number
           rest_seconds: number
@@ -191,6 +201,7 @@ export type Database = {
           day_id: string
           exercise_id: string
           id?: string
+          notes?: string | null
           position?: number
           reps?: number
           rest_seconds?: number
@@ -203,6 +214,7 @@ export type Database = {
           day_id?: string
           exercise_id?: string
           id?: string
+          notes?: string | null
           position?: number
           reps?: number
           rest_seconds?: number
@@ -230,6 +242,7 @@ export type Database = {
       workout_plans: {
         Row: {
           created_at: string
+          goal: string
           id: string
           is_active: boolean
           name: string
@@ -237,6 +250,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          goal?: string
           id?: string
           is_active?: boolean
           name: string
@@ -244,6 +258,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          goal?: string
           id?: string
           is_active?: boolean
           name?: string
