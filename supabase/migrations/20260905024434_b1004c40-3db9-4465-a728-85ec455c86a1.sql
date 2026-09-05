@@ -1,0 +1,1 @@
+UPDATE public.exercises SET image_key = slug;

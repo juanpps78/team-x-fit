@@ -1,0 +1,1 @@
+UPDATE public.exercises SET name = 'Extensión de tríceps con mancuerna sobre la cabeza' WHERE slug = 'extension-triceps';
