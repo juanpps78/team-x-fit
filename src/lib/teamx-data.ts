@@ -1,5 +1,5 @@
 /**
- * Modelo de datos (Etapa 2, conectado al backend):
+ * Modelo de datos (Etapa 2-3, conectado al backend):
  * profiles, exercises, workout_plans, workout_days, workout_exercises,
  * workout_sessions, exercise_sets.
  * Este archivo sólo conserva los tipos compartidos y textos estáticos de la UI.
@@ -14,6 +14,7 @@ export type Exercise = {
   targetWeight: number;
   restSeconds: number;
   muscle: string;
+  notes: string;
 };
 
 export type LoggedExercise = {
@@ -33,6 +34,14 @@ export type User = {
   totalWorkouts: number;
   streak: number;
 };
+
+export const GOALS = [
+  "Ganar músculo",
+  "Ganar fuerza",
+  "Perder grasa",
+  "Mantener",
+  "Otro",
+] as const;
 
 export const suggestedQuestions = [
   "¿Qué entreno hoy?",
