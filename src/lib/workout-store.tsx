@@ -11,7 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { exerciseImage } from "./exercise-images";
 import type { Exercise, LoggedExercise, User } from "./teamx-data";
 
-type WorkoutDay = { id: string; title: string; estimatedMinutes: number };
+export type WorkoutDay = { id: string; title: string; estimatedMinutes: number; planId: string };
+export type Plan = { id: string; name: string; goal: string; isActive: boolean };
 
 type SessionState = {
   id: string | null;
@@ -35,7 +36,14 @@ type Record_ = { name: string; value: number };
 type Ctx = {
   loading: boolean;
   user: User;
+  plans: Plan[];
+  activePlan: Plan | null;
+  days: WorkoutDay[];
   day: WorkoutDay;
+  selectDay: (id: string) => void;
+  activatePlan: (id: string) => Promise<void>;
+  deletePlan: (id: string) => Promise<void>;
+  reload: () => Promise<void>;
   exercises: Exercise[];
   session: SessionState;
   history: HistoryPoint[];
@@ -60,6 +68,8 @@ const fallbackUser: User = {
   streak: 0,
 };
 
+const emptyDay: WorkoutDay = { id: "", title: "Mi rutina", estimatedMinutes: 55, planId: "" };
+
 function relativeDay(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
   if (diff <= 0) return "Hoy";
@@ -70,7 +80,9 @@ function relativeDay(iso: string): string {
 export function WorkoutProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>(fallbackUser);
-  const [day, setDay] = useState<WorkoutDay>({ id: "", title: "Mi rutina", estimatedMinutes: 55 });
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [days, setDays] = useState<WorkoutDay[]>([]);
+  const [selectedDayId, setSelectedDayId] = useState<string>("");
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [session, setSession] = useState<SessionState>(emptySession);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
@@ -94,14 +106,13 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       _name: (auth.user?.user_metadata?.["name"] as string | undefined) ?? "Atleta",
     });
 
-    const [profileRes, dayRes, sessionsRes] = await Promise.all([
+    const [profileRes, plansRes, daysRes, sessionsRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
+      supabase.from("workout_plans").select("id, name, goal, is_active").order("created_at"),
       supabase
         .from("workout_days")
-        .select("id, title, estimated_minutes")
-        .order("day_order")
-        .limit(1)
-        .maybeSingle(),
+        .select("id, title, estimated_minutes, plan_id, day_order")
+        .order("day_order"),
       supabase
         .from("workout_sessions")
         .select("id, started_at, finished_at, total_volume, total_sets, duration_minutes, day_id")
@@ -123,29 +134,27 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       });
     }
 
-    const dayRow = dayRes.data;
-    if (dayRow) {
-      setDay({ id: dayRow.id, title: dayRow.title, estimatedMinutes: dayRow.estimated_minutes });
+    const planList: Plan[] = (plansRes.data ?? []).map((p) => ({
+      id: p.id,
+      name: p.name,
+      goal: p.goal,
+      isActive: p.is_active,
+    }));
+    setPlans(planList);
 
-      const { data: wex } = await supabase
-        .from("workout_exercises")
-        .select("id, sets, reps, target_weight, rest_seconds, position, exercises(name, muscle, image_key)")
-        .eq("day_id", dayRow.id)
-        .order("position");
-
-      setExercises(
-        (wex ?? []).map((w) => ({
-          id: w.id,
-          name: w.exercises?.name ?? "Ejercicio",
-          muscle: w.exercises?.muscle ?? "",
-          image: exerciseImage(w.exercises?.image_key ?? "press-banca"),
-          sets: w.sets,
-          reps: w.reps,
-          targetWeight: Number(w.target_weight),
-          restSeconds: w.rest_seconds,
-        })),
-      );
-    }
+    const active = planList.find((p) => p.isActive) ?? planList[0] ?? null;
+    const dayList: WorkoutDay[] = (daysRes.data ?? [])
+      .filter((d) => d.plan_id === active?.id)
+      .map((d) => ({
+        id: d.id,
+        title: d.title,
+        estimatedMinutes: d.estimated_minutes,
+        planId: d.plan_id,
+      }));
+    setDays(dayList);
+    setSelectedDayId((prev) =>
+      dayList.some((d) => d.id === prev) ? prev : (dayList[0]?.id ?? ""),
+    );
 
     setHistory(
       finished.slice(-7).map((s, i) => ({ week: `S${i + 1}`, volumen: Number(s.total_volume) })),
@@ -153,8 +162,9 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 
     const last = finished[finished.length - 1];
     if (last) {
+      const lastDay = (daysRes.data ?? []).find((d) => d.id === last.day_id);
       setLastWorkout({
-        title: dayRow?.title ?? "Entrenamiento",
+        title: lastDay?.title ?? "Entrenamiento",
         when: relativeDay(last.started_at),
         minutes: last.duration_minutes,
         volume: Number(last.total_volume),
@@ -176,6 +186,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 
     const open = (sessionsRes.data ?? []).find((s) => !s.finished_at);
     if (open) {
+      if (open.day_id) setSelectedDayId(open.day_id);
       const { data: logs } = await supabase
         .from("exercise_sets")
         .select("workout_exercise_id, weight, reps, sets, notes")
@@ -205,6 +216,78 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Ejercicios del día seleccionado
+  useEffect(() => {
+    let alive = true;
+    if (!selectedDayId) {
+      setExercises([]);
+      return;
+    }
+    void (async () => {
+      const { data: wex } = await supabase
+        .from("workout_exercises")
+        .select(
+          "id, sets, reps, target_weight, rest_seconds, position, notes, exercises(name, muscle, image_key)",
+        )
+        .eq("day_id", selectedDayId)
+        .order("position");
+      if (!alive) return;
+      setExercises(
+        (wex ?? []).map((w) => ({
+          id: w.id,
+          name: w.exercises?.name ?? "Ejercicio",
+          muscle: w.exercises?.muscle ?? "",
+          image: exerciseImage(w.exercises?.image_key ?? "press-banca"),
+          sets: w.sets,
+          reps: w.reps,
+          targetWeight: Number(w.target_weight),
+          restSeconds: w.rest_seconds,
+          notes: w.notes ?? "",
+        })),
+      );
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [selectedDayId]);
+
+  const day = useMemo(
+    () => days.find((d) => d.id === selectedDayId) ?? emptyDay,
+    [days, selectedDayId],
+  );
+
+  const activePlan = useMemo(
+    () => plans.find((p) => p.isActive) ?? plans[0] ?? null,
+    [plans],
+  );
+
+  const selectDay = useCallback((id: string) => {
+    setSelectedDayId(id);
+    setSession(emptySession);
+  }, []);
+
+  const activatePlan = useCallback(
+    async (id: string) => {
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid) return;
+      await supabase.from("workout_plans").update({ is_active: false }).eq("user_id", uid);
+      await supabase.from("workout_plans").update({ is_active: true }).eq("id", id);
+      setSelectedDayId("");
+      await load();
+    },
+    [load],
+  );
+
+  const deletePlan = useCallback(
+    async (id: string) => {
+      await supabase.from("workout_plans").delete().eq("id", id);
+      setSelectedDayId("");
+      await load();
+    },
+    [load],
+  );
 
   const startWorkout = useCallback(async () => {
     if (session.id) return;
@@ -302,7 +385,14 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     () => ({
       loading,
       user,
+      plans,
+      activePlan,
+      days,
       day,
+      selectDay,
+      activatePlan,
+      deletePlan,
+      reload: load,
       exercises,
       session,
       history,
@@ -317,7 +407,14 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     [
       loading,
       user,
+      plans,
+      activePlan,
+      days,
       day,
+      selectDay,
+      activatePlan,
+      deletePlan,
+      load,
       exercises,
       session,
       history,
