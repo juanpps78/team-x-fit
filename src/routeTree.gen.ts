@@ -19,6 +19,8 @@ import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedProgresoRouteImport } from './routes/_authenticated/progreso'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as AuthenticatedRutinaRouteImport } from './routes/_authenticated/rutina'
+import { Route as AuthenticatedRutinasPlanIdRouteImport } from './routes/_authenticated/rutinas.$planId'
+import { Route as AuthenticatedRutinasNuevaRouteImport } from './routes/_authenticated/rutinas.nueva'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +71,18 @@ const AuthenticatedRutinaRoute = AuthenticatedRutinaRouteImport.update({
   path: '/rutina',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRutinasPlanIdRoute =
+  AuthenticatedRutinasPlanIdRouteImport.update({
+    id: '/rutinas/$planId',
+    path: '/rutinas/$planId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRutinasNuevaRoute =
+  AuthenticatedRutinasNuevaRouteImport.update({
+    id: '/rutinas/nueva',
+    path: '/rutinas/nueva',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +94,8 @@ export interface FileRoutesByFullPath {
   '/progreso': typeof AuthenticatedProgresoRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/rutina': typeof AuthenticatedRutinaRoute
+  '/rutinas/$planId': typeof AuthenticatedRutinasPlanIdRoute
+  '/rutinas/nueva': typeof AuthenticatedRutinasNuevaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +107,8 @@ export interface FileRoutesByTo {
   '/progreso': typeof AuthenticatedProgresoRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/rutina': typeof AuthenticatedRutinaRoute
+  '/rutinas/$planId': typeof AuthenticatedRutinasPlanIdRoute
+  '/rutinas/nueva': typeof AuthenticatedRutinasNuevaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +122,8 @@ export interface FileRoutesById {
   '/_authenticated/progreso': typeof AuthenticatedProgresoRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/_authenticated/rutina': typeof AuthenticatedRutinaRoute
+  '/_authenticated/rutinas/$planId': typeof AuthenticatedRutinasPlanIdRoute
+  '/_authenticated/rutinas/nueva': typeof AuthenticatedRutinasNuevaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +137,8 @@ export interface FileRouteTypes {
     | '/progreso'
     | '/resumen'
     | '/rutina'
+    | '/rutinas/$planId'
+    | '/rutinas/nueva'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +150,8 @@ export interface FileRouteTypes {
     | '/progreso'
     | '/resumen'
     | '/rutina'
+    | '/rutinas/$planId'
+    | '/rutinas/nueva'
   id:
     | '__root__'
     | '/'
@@ -140,6 +164,8 @@ export interface FileRouteTypes {
     | '/_authenticated/progreso'
     | '/_authenticated/resumen'
     | '/_authenticated/rutina'
+    | '/_authenticated/rutinas/$planId'
+    | '/_authenticated/rutinas/nueva'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -220,6 +246,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRutinaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/rutinas/$planId': {
+      id: '/_authenticated/rutinas/$planId'
+      path: '/rutinas/$planId'
+      fullPath: '/rutinas/$planId'
+      preLoaderRoute: typeof AuthenticatedRutinasPlanIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/rutinas/nueva': {
+      id: '/_authenticated/rutinas/nueva'
+      path: '/rutinas/nueva'
+      fullPath: '/rutinas/nueva'
+      preLoaderRoute: typeof AuthenticatedRutinasNuevaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -231,6 +271,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgresoRoute: typeof AuthenticatedProgresoRoute
   AuthenticatedResumenRoute: typeof AuthenticatedResumenRoute
   AuthenticatedRutinaRoute: typeof AuthenticatedRutinaRoute
+  AuthenticatedRutinasPlanIdRoute: typeof AuthenticatedRutinasPlanIdRoute
+  AuthenticatedRutinasNuevaRoute: typeof AuthenticatedRutinasNuevaRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -241,6 +283,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgresoRoute: AuthenticatedProgresoRoute,
   AuthenticatedResumenRoute: AuthenticatedResumenRoute,
   AuthenticatedRutinaRoute: AuthenticatedRutinaRoute,
+  AuthenticatedRutinasPlanIdRoute: AuthenticatedRutinasPlanIdRoute,
+  AuthenticatedRutinasNuevaRoute: AuthenticatedRutinasNuevaRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
